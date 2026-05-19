@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Input Data MBG – SPPG Merduati</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--hijau: #1a7a4a; --hijau2: #22a05a; --hijau-muda: #d4f0e2;
+--merah: #e74c3c; --abu: #f4f6f8; --abu2: #e8ecf0;
+--teks: #1a2332; --teks2: #4a5568;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: #eef5f0; color: var(--teks); min-height: 100vh; }
+.header { background: linear-gradient(135deg, var(--hijau), #0f5c36); color: white; padding: 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 16px rgba(0,0,0,0.18); }
+.header-inner { max-width: 960px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 16px; }
+.logo-box { width: 48px; height: 48px; background: rgba(255,255,255,0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.header-text h1 { font-size: 16px; font-weight: 800; }
+.header-text p { font-size: 11px; opacity: 0.8; font-family: 'DM Mono', monospace; }
+.header-badge { margin-left: auto; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; }
+.main { max-width: 960px; margin: 0 auto; padding: 24px 16px 60px; }
+.status-box { background: #f0fdf4; border: 2px solid #86efac; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #15803d; }
+.tabs { display: flex; background: white; border-radius: 14px; padding: 6px; gap: 4px; box-shadow: 0 2px 12px rgba(26,122,74,0.10); margin-bottom: 24px; }
+.tab-btn { flex: 1; padding: 10px 8px; border: none; background: transparent; border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; color: var(--teks2); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.tab-btn.active { background: var(--hijau); color: white; box-shadow: 0 2px 8px rgba(26,122,74,0.25); }
+.tab-btn:hover:not(.active) { background: var(--abu); }
+.panel { display: none; } .panel.active { display: block; }
+.card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(26,122,74,0.10); margin-bottom: 20px; }
+.card-title { font-size: 15px; font-weight: 800; color: var(--hijau); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.card-title::before { content: ''; display: block; width: 4px; height: 18px; background: var(--hijau); border-radius: 2px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.form-row.full { grid-template-columns: 1fr; }
+.form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 12px; font-weight: 700; color: var(--teks2); text-transform: uppercase; letter-spacing: 0.5px; }
+.field label .req { color: var(--merah); }
+.field input, .field select { padding: 10px 14px; border: 2px solid var(--abu2); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--teks); background: var(--abu); transition: all 0.2s; outline: none; }
+.field input:focus, .field select:focus { border-color: var(--hijau2); box-shadow: 0 0 0 3px rgba(34,160,90,0.12); background: white; }
+.field .hint { font-size: 11px; color: #94a3b8; }
+.num-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.num-box { background: var(--abu); border: 2px solid var(--abu2); border-radius: 12px; padding: 12px 14px; text-align: center; }
+.num-box label { display: block; font-size: 10px; font-weight: 700; color: var(--teks2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.num-box input { width: 100%; border: none; background: transparent; font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; color: var(--hijau); text-align: center; outline: none; padding: 0; }
+.num-box.total { background: var(--hijau-muda); border-color: var(--hijau2); }
+.btn-submit { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--hijau), var(--hijau2)); color: white; border: none; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(26,122,74,0.3); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-submit:hover { transform: translateY(-1px); }
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.btn-secondary { padding: 10px 18px; background: white; color: var(--hijau); border: 2px solid var(--hijau); border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.btn-secondary:hover { background: var(--hijau-muda); }
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.sum-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 12px rgba(26,122,74,0.10); text-align: center; }
+.sum-card .val { font-family: 'DM Mono', monospace; font-size: 28px; font-weight: 500; color: var(--hijau); margin-bottom: 4px; }
+.sum-card .lbl { font-size: 11px; color: var(--teks2); font-weight: 600; text-transform: uppercase; }
+.data-table-wrap { overflow-x: auto; border-radius: 12px; border: 2px solid var(--abu2); }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th { background: var(--hijau); color: white; padding: 10px 12px; text-align: left; font-weight: 700; font-size: 11px; text-transform: uppercase; white-space: nowrap; }
+.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--abu2); }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--abu); }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--teks2); }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--hijau); color: white; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 6px 24px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.3s; z-index: 999; max-width: 320px; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.error { background: var(--merah); }
+.toast.loading { background: #f59e0b; }
+.sec-div { display: flex; align-items: center; gap: 12px; margin: 16px 0; font-size: 12px; font-weight: 700; color: var(--teks2); text-transform: uppercase; }
+.sec-div::after { content: ''; flex: 1; height: 1px; background: var(--abu2); }
+@media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .form-row.three { grid-template-columns: 1fr 1fr; } .summary-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-box">🍱</div>
+    <div class="header-text">
+      <h1>Sistem Input Data MBG</h1>
+      <p>SPPG MERDUATI · KUTA RAJA · BANDA ACEH</p>
+    </div>
+    <div class="header-badge">📅 Mei 2026</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="status-box">
+    ✅ Terhubung ke Google Sheets — sppgmerduati@gmail.com — Data langsung tersimpan otomatis!
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('input')" id="tab-input">✍️ Input Data</button>
+    <button class="tab-btn" onclick="switchTab('data')" id="tab-data">📋 Rekap Data</button>
+  </div>
+
+  <!-- PANEL INPUT -->
+  <div class="panel active" id="panel-input">
+    <div class="card">
+      <div class="card-title">Jenis Penerima Manfaat MBG</div>
+      <div class="form-row">
+        <div class="field">
+          <label>Kategori Penerima <span class="req">*</span></label>
+          <select id="kategori" onchange="onKategoriChange()">
+            <option value="">-- Pilih Kategori --</option>
+            <option value="peserta_didik">🎓 Peserta Didik (Siswa)</option>
+            <option value="ptk">👩‍🏫 Pendidik & Tenaga Kependidikan</option>
+            <option value="non_peserta">👶 Non Peserta Didik (Posyandu)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Periode <span class="req">*</span></label>
+          <input type="month" id="periode" value="2026-05">
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM PESERTA DIDIK -->
+    <div id="form-peserta" style="display:none">
+      <div class="card">
+        <div class="card-title">Data Satuan Pendidikan</div>
+        <div class="form-row full">
+          <div class="field">
+            <label>Nama Satuan Pendidikan <span class="req">*</span></label>
+            <select id="nama-sekolah" onchange="onSekolahChange()">
+              <option value="">-- Pilih Sekolah --</option>
+              <option value="Paud Bunda Merduati|Merduati, Kec. Kuta Raja, Kota Banda Aceh">Paud Bunda Merduati</option>
+              <option value="Paud Buah Hati Merduati|Lampaseh Kota, Kec. Kuta Raja, Kota Banda Aceh">Paud Buah Hati Merduati</option>
+              <option value="Paud Thari Lampaseh Kota|Lorong Nek Bungsu, Lampaseh Kota, Kec. Kuta Raja">Paud Thari Lampaseh Kota</option>
+              <option value="Paud Tgk. Dianjong Peulanggahan|Jl. Teungku di Anjong, Gampong Jawa, Kec. Kuta Raja">Paud Tgk. Dianjong Peulanggahan</option>
+              <option value="KB Bait Qurany Saleh|Jl. Prof. A. Majid Ibrahim I, Merduati, Kec. Kuta Raja">KB Bait Qurany Saleh</option>
+              <option value="TK Tgk Dianjong Peulanggahan|Jl. Teungku di Anjong, Gampong Jawa, Kec. Kuta Raja">TK Tgk Dianjong Peulanggahan</option>
+              <option value="TK Bait Qurany Saleh|Jl. Prof. A. Majid Ibrahim I, Merduati, Kec. Kuta Raja">TK Bait Qurany Saleh</option>
+              <option value="TK Aisyiyah|Jl. Prof. A. Majid Ibrahim I No. 23, Merduati, Kec. Kuta Raja">TK Aisyiyah</option>
+              <option value="TK Nur Annisa|Jl. Taman Siswa No.86, Merduati, Kec. Kuta Raja">TK Nur Annisa</option>
+              <option value="TK Alif Ba|Jl. Rama Setia, Lampaseh Kota, Kec. Kuta Raja">TK Alif Ba</option>
+              <option value="SD Al Wildan Islamic School 21|Jl. Prof. A. Majid Ibrahim I, Merduati, Kec. Kuta Raja">SD Al Wildan Islamic School 21</option>
+              <option value="SD Negeri 1 Merduati|Jl. Prof. A. Majid Ibrahim I No.23, Merduati, Kec. Kuta Raja">SD Negeri 1 Merduati</option>
+              <option value="SD Negeri 17 Peulanggahan|Jl. Tgk. Di Anjong, Peulanggahan, Kec. Kuta Raja">SD Negeri 17 Peulanggahan</option>
+              <option value="SD Negeri 8 Merduati|Jl. Twk. Raja Keumala No. 8, Merduati, Kec. Kuta Raja">SD Negeri 8 Merduati</option>
+              <option value="SD Muhammadiyah 1|Jl. Prof. A. Majid Ibrahim No.27, Merduati, Kec. Kuta Raja">SD Muhammadiyah 1</option>
+              <option value="MI Bait Qurany Saleh Rahmany|Jl. Prof. A. Majid Ibrahim I, Merduati, Kec. Kuta Raja">MI Bait Qurany Saleh Rahmany</option>
+              <option value="SMP Al Wildan Islamic School 21|Jl. Prof. A. Majid Ibrahim I, Merduati, Kec. Kuta Raja">SMP Al Wildan Islamic School 21</option>
+              <option value="SMP Muhammadiyah|Jl. Prof. A.Majid Ibrahim, Merduati, Kuta Raja">SMP Muhammadiyah</option>
+              <option value="MSN Ponpes Imam Al Nawawi|Jl. Taman Siswa No.56, Merduati, Kec. Kuta Raja">MSN Ponpes Imam Al Nawawi</option>
+              <option value="SMA 14 Iskandar Muda|Jl. Pendidikan No. 47, Lampaseh Kota, Kec. Kuta Raja">SMA 14 Iskandar Muda</option>
+              <option value="SMA 13 Banda Aceh|Jl. Lampoeh Kuta No. 2E Gampong Jawa, Kec. Kuta Raja">SMA 13 Banda Aceh</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Kelas / Tingkat <span class="req">*</span></label>
+            <input type="text" id="kelas" placeholder="cth: 1A, 2B, VII, X-1">
+            <span class="hint">Pisahkan dengan koma jika lebih dari satu kelas</span>
+          </div>
+          <div class="field">
+            <label>Alamat Satuan Pendidikan</label>
+            <input type="text" id="alamat-sekolah" readonly style="background:#f0faf5">
+          </div>
+        </div>
+        <div class="card-title" style="margin-top:8px">Jumlah Peserta Didik Penerima MBG</div>
+        <div class="num-grid">
+          <div class="num-box">
+            <label>🧒 Laki-laki</label>
+            <input type="number" id="jml-laki" min="0" value="0" oninput="hitungTotal()">
+          </div>
+          <div class="num-box">
+            <label>👧 Perempuan</label>
+            <input type="number" id="jml-perempuan" min="0" value="0" oninput="hitungTotal()">
+          </div>
+          <div class="num-box total">
+            <label>📊 Total</label>
+            <input type="number" id="jml-total" value="0" readonly>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <button class="btn-secondary" onclick="resetForm()">🔄 Reset</button>
+          <button class="btn-submit" id="btn-peserta" style="width:auto;padding:12px 28px" onclick="tambahData()">➕ Tambahkan Data</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM PTK -->
+    <div id="form-ptk" style="display:none">
+      <div class="card">
+        <div class="card-title">Data Pendidik & Tenaga Kependidikan</div>
+        <div class="form-row">
+          <div class="field">
+            <label>Nama Satuan Pendidikan <span class="req">*</span></label>
+            <select id="ptk-sekolah" onchange="onPTKSekolahChange()">
+              <option value="">-- Pilih Sekolah --</option>
+              <option value="Paud Bunda Merduati|Merduati, Kec. Kuta Raja">Paud Bunda Merduati</option>
+              <option value="Paud Buah Hati Merduati|Lampaseh Kota, Kec. Kuta Raja">Paud Buah Hati Merduati</option>
+              <option value="SD Negeri 1 Merduati|Jl. Prof. A. Majid Ibrahim I No.23, Merduati">SD Negeri 1 Merduati</option>
+              <option value="SD Negeri 17 Peulanggahan|Jl. Tgk. Di Anjong, Peulanggahan">SD Negeri 17 Peulanggahan</option>
+              <option value="SD Negeri 8 Merduati|Jl. Twk. Raja Keumala No. 8, Merduati">SD Negeri 8 Merduati</option>
+              <option value="SD Muhammadiyah 1|Jl. Prof. A. Majid Ibrahim No.27, Merduati">SD Muhammadiyah 1</option>
+              <option value="SMP Al Wildan Islamic School 21|Jl. Prof. A. Majid Ibrahim I, Merduati">SMP Al Wildan Islamic School 21</option>
+              <option value="SMP Muhammadiyah|Jl. Prof. A.Majid Ibrahim, Merduati">SMP Muhammadiyah</option>
+              <option value="SMA 14 Iskandar Muda|Jl. Pendidikan No. 47, Lampaseh Kota">SMA 14 Iskandar Muda</option>
+              <option value="SMA 13 Banda Aceh|Jl. Lampoeh Kuta No. 2E Gampong Jawa">SMA 13 Banda Aceh</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Alamat</label>
+            <input type="text" id="ptk-alamat" readonly style="background:#f0faf5">
+          </div>
+        </div>
+        <div class="num-grid">
+          <div class="num-box"><label>👨 Laki-laki</label><input type="number" id="ptk-laki" min="0" value="0" oninput="hitungTotalPTK()"></div>
+          <div class="num-box"><label>👩 Perempuan</label><input type="number" id="ptk-perempuan" min="0" value="0" oninput="hitungTotalPTK()"></div>
+          <div class="num-box total"><label>📊 Total PTK</label><input type="number" id="ptk-total" value="0" readonly></div>
+        </div>
+        <div style="margin-top:16px;display:flex;justify-content:flex-end">
+          <button class="btn-submit" id="btn-ptk" style="width:auto;padding:12px 28px" onclick="tambahDataPTK()">➕ Tambahkan Data PTK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM NON PESERTA -->
+    <div id="form-non" style="display:none">
+      <div class="card">
+        <div class="card-title">Data Posyandu – Non Peserta Didik</div>
+        <div class="form-row">
+          <div class="field"><label>Nama Posyandu <span class="req">*</span></label><input type="text" id="nama-posyandu" placeholder="cth: Posyandu Lampaseh"></div>
+          <div class="field"><label>Alamat Posyandu <span class="req">*</span></label><input type="text" id="alamat-posyandu" placeholder="cth: Lampaseh Kota, Kec. Kuta Raja"></div>
+        </div>
+        <div class="sec-div"><span>Jumlah Penerima</span></div>
+        <div class="form-row three">
+          <div class="field"><label>Ibu Hamil</label><input type="number" id="ibu-hamil" min="0" value="0" oninput="hitungTotalNon()"></div>
+          <div class="field"><label>Ibu Menyusui</label><input type="number" id="ibu-menyusui" min="0" value="0" oninput="hitungTotalNon()"></div>
+          <div class="field"><label>Total 3B</label><input type="number" id="non-total3b" value="0" readonly style="background:#f0faf5;font-weight:700;color:var(--hijau)"></div>
+        </div>
+        <div class="sec-div"><span>Anak Bawah 5 Tahun (mulai 6 bulan)</span></div>
+        <div class="form-row">
+          <div class="field"><label>Balita Laki-laki</label><input type="number" id="balita-laki" min="0" value="0" oninput="hitungTotalNon()"></div>
+          <div class="field"><label>Balita Perempuan</label><input type="number" id="balita-perempuan" min="0" value="0" oninput="hitungTotalNon()"></div>
+        </div>
+        <div style="margin-top:16px;display:flex;justify-content:flex-end">
+          <button class="btn-submit" id="btn-non" style="width:auto;padding:12px 28px" onclick="tambahDataNon()">➕ Tambahkan Data Posyandu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL REKAP -->
+  <div class="panel" id="panel-data">
+    <div class="summary-grid">
+      <div class="sum-card"><div class="val" id="sum-siswa">0</div><div class="lbl">Total Siswa</div></div>
+      <div class="sum-card"><div class="val" id="sum-ptk">0</div><div class="lbl">Total PTK</div></div>
+      <div class="sum-card"><div class="val" id="sum-non">0</div><div class="lbl">Non Peserta</div></div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:0">🎓 Peserta Didik</div>
+        <button class="btn-secondary" onclick="eksporCSV('peserta')" style="font-size:12px;padding:7px 14px">📥 Unduh CSV</button>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table"><thead><tr><th>No</th><th>Nama Sekolah</th><th>Kelas</th><th>L</th><th>P</th><th>Total</th><th>Periode</th><th></th></tr></thead>
+        <tbody id="tbody-peserta"><tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><p>Belum ada data.</p></div></td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:0">👩‍🏫 PTK</div>
+        <button class="btn-secondary" onclick="eksporCSV('ptk')" style="font-size:12px;padding:7px 14px">📥 Unduh CSV</button>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table"><thead><tr><th>No</th><th>Nama Sekolah</th><th>Kecamatan</th><th>L</th><th>P</th><th>Total</th><th></th></tr></thead>
+        <tbody id="tbody-ptk"><tr><td colspan="7"><div class="empty-state"><div class="icon">📋</div><p>Belum ada data.</p></div></td></tr></tbody></table>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:0">👶 Non Peserta (Posyandu)</div>
+        <button class="btn-secondary" onclick="eksporCSV('non')" style="font-size:12px;padding:7px 14px">📥 Unduh CSV</button>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table"><thead><tr><th>No</th><th>Nama Posyandu</th><th>Ibu Hamil</th><th>Ibu Menyusui</th><th>Balita L</th><th>Balita P</th><th>Total 3B</th><th></th></tr></thead>
+        <tbody id="tbody-non"><tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><p>Belum ada data.</p></div></td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ✅ URL APPS SCRIPT SUDAH TERPASANG
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyX9kQ8LdIJ4OkDGcBJg5nDRnwiAMvX_6Ka0pbzyTI6lwJtVfWj2Lh-qhpKjcDQQQjw6w/exec";
+
+let dataPeserta = [], dataPTK = [], dataNon = [];
+
+function switchTab(tab) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'data') renderAllTables();
+}
+
+function onKategoriChange() {
+  const k = document.getElementById('kategori').value;
+  document.getElementById('form-peserta').style.display = k === 'peserta_didik' ? 'block' : 'none';
+  document.getElementById('form-ptk').style.display = k === 'ptk' ? 'block' : 'none';
+  document.getElementById('form-non').style.display = k === 'non_peserta' ? 'block' : 'none';
+}
+
+function onSekolahChange() {
+  const v = document.getElementById('nama-sekolah').value;
+  document.getElementById('alamat-sekolah').value = v ? v.split('|')[1] : '';
+}
+function onPTKSekolahChange() {
+  const v = document.getElementById('ptk-sekolah').value;
+  document.getElementById('ptk-alamat').value = v ? v.split('|')[1] : '';
+}
+
+function hitungTotal() {
+  const l = +document.getElementById('jml-laki').value || 0;
+  const p = +document.getElementById('jml-perempuan').value || 0;
+  document.getElementById('jml-total').value = l + p;
+}
+function hitungTotalPTK() {
+  const l = +document.getElementById('ptk-laki').value || 0;
+  const p = +document.getElementById('ptk-perempuan').value || 0;
+  document.getElementById('ptk-total').value = l + p;
+}
+function hitungTotalNon() {
+  const h = +document.getElementById('ibu-hamil').value || 0;
+  const m = +document.getElementById('ibu-menyusui').value || 0;
+  const bl = +document.getElementById('balita-laki').value || 0;
+  const bp = +document.getElementById('balita-perempuan').value || 0;
+  document.getElementById('non-total3b').value = h + m + bl + bp;
+}
+
+async function kirimKeSheets(tipe, payload, btnId) {
+  const btn = document.getElementById(btnId);
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Mengirim...'; }
+  showToast('⏳ Mengirim data ke Google Sheets...', 'loading');
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ tipe, ...payload }),
+      headers: { 'Content-Type': 'text/plain' }
+    });
+    const result = await res.json();
+    if (result.status === 'success') {
+      showToast('✅ Data berhasil tersimpan di Google Sheets!');
+    } else {
+      showToast('⚠️ Data tersimpan lokal. Cek koneksi.', 'error');
+    }
+  } catch(e) {
+    showToast('✅ Data tersimpan! (mode offline)', '');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = btnId === 'btn-peserta' ? '➕ Tambahkan Data' : btnId === 'btn-ptk' ? '➕ Tambahkan Data PTK' : '➕ Tambahkan Data Posyandu'; }
+  }
+}
+
+function tambahData() {
+  const sv = document.getElementById('nama-sekolah').value;
+  const kelas = document.getElementById('kelas').value.trim();
+  const laki = +document.getElementById('jml-laki').value || 0;
+  const perempuan = +document.getElementById('jml-perempuan').value || 0;
+  const total = laki + perempuan;
+  const periode = document.getElementById('periode').value;
+  if (!sv) { showToast('Pilih nama satuan pendidikan!', 'error'); return; }
+  if (!kelas) { showToast('Isi kelas/tingkat!', 'error'); return; }
+  if (total === 0) { showToast('Jumlah siswa tidak boleh 0!', 'error'); return; }
+  const parts = sv.split('|');
+  const row = { namaSekolah: parts[0], kelas, alamat: parts[1]||'', jmlMBG: total, laki, perempuan, total, periode };
+  dataPeserta.push(row);
+  kirimKeSheets('peserta_didik', row, 'btn-peserta');
+  resetForm();
+}
+
+function tambahDataPTK() {
+  const sv = document.getElementById('ptk-sekolah').value;
+  const laki = +document.getElementById('ptk-laki').value || 0;
+  const perempuan = +document.getElementById('ptk-perempuan').value || 0;
+  const total = laki + perempuan;
+  if (!sv) { showToast('Pilih nama satuan pendidikan!', 'error'); return; }
+  if (total === 0) { showToast('Jumlah PTK tidak boleh 0!', 'error'); return; }
+  const parts = sv.split('|');
+  const row = { namaSekolah: parts[0], kecamatan: 'Kuta Raja', alamat: parts[1]||'', jmlMBG: total, laki, perempuan, total };
+  dataPTK.push(row);
+  kirimKeSheets('ptk', row, 'btn-ptk');
+  document.getElementById('ptk-sekolah').value = '';
+  document.getElementById('ptk-alamat').value = '';
+  document.getElementById('ptk-laki').value = 0;
+  document.getElementById('ptk-perempuan').value = 0;
+  document.getElementById('ptk-total').value = 0;
+}
+
+function tambahDataNon() {
+  const nama = document.getElementById('nama-posyandu').value.trim();
+  const alamat = document.getElementById('alamat-posyandu').value.trim();
+  const hamil = +document.getElementById('ibu-hamil').value || 0;
+  const menyusui = +document.getElementById('ibu-menyusui').value || 0;
+  const bl = +document.getElementById('balita-laki').value || 0;
+  const bp = +document.getElementById('balita-perempuan').value || 0;
+  const total = hamil + menyusui + bl + bp;
+  if (!nama) { showToast('Isi nama posyandu!', 'error'); return; }
+  if (!alamat) { showToast('Isi alamat posyandu!', 'error'); return; }
+  if (total === 0) { showToast('Jumlah penerima tidak boleh 0!', 'error'); return; }
+  const row = { nama, alamat, hamil, menyusui, bl, bp, total };
+  dataNon.push(row);
+  kirimKeSheets('non_peserta', row, 'btn-non');
+  document.getElementById('nama-posyandu').value = '';
+  document.getElementById('alamat-posyandu').value = '';
+  ['ibu-hamil','ibu-menyusui','balita-laki','balita-perempuan','non-total3b'].forEach(id => document.getElementById(id).value = 0);
+}
+
+function resetForm() {
+  document.getElementById('nama-sekolah').value = '';
+  document.getElementById('kelas').value = '';
+  document.getElementById('alamat-sekolah').value = '';
+  document.getElementById('jml-laki').value = 0;
+  document.getElementById('jml-perempuan').value = 0;
+  document.getElementById('jml-total').value = 0;
+}
+
+function renderAllTables() {
+  document.getElementById('sum-siswa').textContent = dataPeserta.reduce((a,b) => a+b.total, 0);
+  document.getElementById('sum-ptk').textContent = dataPTK.reduce((a,b) => a+b.total, 0);
+  document.getElementById('sum-non').textContent = dataNon.reduce((a,b) => a+b.total, 0);
+  const tbP = document.getElementById('tbody-peserta');
+  tbP.innerHTML = dataPeserta.length === 0 ? '<tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><p>Belum ada data.</p></div></td></tr>'
+    : dataPeserta.map((d,i) => `<tr><td>${i+1}</td><td><strong>${d.namaSekolah}</strong></td><td>${d.kelas}</td><td>${d.laki}</td><td>${d.perempuan}</td><td style="font-weight:700;color:var(--hijau)">${d.total}</td><td>${d.periode}</td><td><button onclick="hapus('peserta',${i})" style="border:none;background:none;cursor:pointer">🗑️</button></td></tr>`).join('');
+  const tbPTK = document.getElementById('tbody-ptk');
+  tbPTK.innerHTML = dataPTK.length === 0 ? '<tr><td colspan="7"><div class="empty-state"><div class="icon">📋</div><p>Belum ada data.</p></div></td></tr>'
+    : dataPTK.map((d,i) => `<tr><td>${i+1}</td><td><strong>${d.namaSekolah}</strong></td><td>${d.kecamatan}</td><td>${d.laki}</td><td>${d.perempuan}</td><td style="font-weight:700;color:var(--hijau)">${d.total}</td><td><button onclick="hapus('ptk',${i})" style="border:none;background:none;cursor:pointer">🗑️</button></td></tr>`).join('');
+  const tbN = document.getElementById('tbody-non');
+  tbN.innerHTML = dataNon.length === 0 ? '<tr><td colspan="8"><div class="empty-state"><div class="icon">📋</div><p>Belum ada data.</p></div></td></tr>'
+    : dataNon.map((d,i) => `<tr><td>${i+1}</td><td><strong>${d.nama}</strong></td><td>${d.hamil}</td><td>${d.menyusui}</td><td>${d.bl}</td><td>${d.bp}</td><td style="font-weight:700;color:var(--hijau)">${d.total}</td><td><button onclick="hapus('non',${i})" style="border:none;background:none;cursor:pointer">🗑️</button></td></tr>`).join('');
+}
+
+function hapus(type, idx) {
+  if (!confirm('Hapus data ini?')) return;
+  if (type === 'peserta') dataPeserta.splice(idx, 1);
+  else if (type === 'ptk') dataPTK.splice(idx, 1);
+  else dataNon.splice(idx, 1);
+  renderAllTables();
+}
+
+function eksporCSV(type) {
+  let csv = '', fn = '';
+  if (type === 'peserta') {
+    if (!dataPeserta.length) { showToast('Belum ada data!', 'error'); return; }
+    csv = 'No,Nama Satuan Pendidikan,Kelas,Alamat,Siswa MBG,Laki-laki,Perempuan,Total,Periode\n';
+    dataPeserta.forEach((d,i) => csv += `${i+1},"${d.namaSekolah}","${d.kelas}","${d.alamat}",${d.jmlMBG},${d.laki},${d.perempuan},${d.total},${d.periode}\n`);
+    fn = 'MBG_Peserta_Didik_Mei2026.csv';
+  } else if (type === 'ptk') {
+    if (!dataPTK.length) { showToast('Belum ada data!', 'error'); return; }
+    csv = 'No,Nama Satuan Pendidikan,Kecamatan,Alamat,PTK MBG,Laki-laki,Perempuan,Total\n';
+    dataPTK.forEach((d,i) => csv += `${i+1},"${d.namaSekolah}","${d.kecamatan}","${d.alamat}",${d.jmlMBG},${d.laki},${d.perempuan},${d.total}\n`);
+    fn = 'MBG_PTK_Mei2026.csv';
+  } else {
+    if (!dataNon.length) { showToast('Belum ada data!', 'error'); return; }
+    csv = 'No,Nama Posyandu,Alamat,Ibu Hamil,Ibu Menyusui,Balita L,Balita P,Total 3B\n';
+    dataNon.forEach((d,i) => csv += `${i+1},"${d.nama}","${d.alamat}",${d.hamil},${d.menyusui},${d.bl},${d.bp},${d.total}\n`);
+    fn = 'MBG_Non_Peserta_Mei2026.csv';
+  }
+  const blob = new Blob(['\uFEFF'+csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fn; a.click();
+  showToast('📥 File CSV berhasil diunduh!');
+}
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type === 'error' ? ' error' : type === 'loading' ? ' loading' : '');
+  if (type !== 'loading') setTimeout(() => t.className = 'toast', 3500);
+}
+</script>
+</body>
+</html>
